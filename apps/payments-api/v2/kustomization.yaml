@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: demo-aiops
+resources:
+  - ../base/deployment.yaml
+images:
+  - name: ghcr.io/example/payments-api
+    newTag: v2
+patches:
+  - target:
+      kind: Deployment
+      name: payments-api
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/env
+        value:
+          - name: APP_VERSION
+            value: v2
